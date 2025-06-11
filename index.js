@@ -19,15 +19,25 @@ app.post('/',(req, res) => {
   request(url,(err, response, body) => {
     if(err){
       console.log(err);
-      res.render('index', {weather: null, error: 'Error, please try again'});
+      res.render('index', {weather: null, error: 'Error: Could not connect to weather service. Please check your internet connection and try again.'});
     } else {
       let weather = JSON.parse(body)
-      console.log(weather);
       if(weather.main == undefined){
-        res.render('index', {weather: null, error: 'Error, please try again'});
+        res.render('index', {weather: null, error: 'Error: City not found or API data unavailable.'});
       } else {
-        let weatherText = `It's ${weather.main.temp} degrees in ${weather.name}!`;
-        res.render('index', {weather: weatherText, error: null});
+        const description = weather.weather[0].description;
+        const formattedDescription = description.charAt(0).toUpperCase() + description.slice(1);
+
+        let weatherData = {
+          temp: weather.main.temp,
+          name: weather.name,
+          humidity: weather.main.humidity,
+          windSpeed: weather.wind.speed,
+          description: formattedDescription,
+          condition: weather.weather[0].main,
+          icon: weather.weather[0].icon
+        };
+        res.render('index', {weather: weatherData, error: null});
       }
     }
   });
