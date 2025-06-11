@@ -1,60 +1,143 @@
-
+/* General UI improvements */
 body {
-  width: 800px;
-  margin: 0 auto;
   font-family: 'Open Sans', sans-serif;
-}
-.container {
-  width: 600px;
-  margin: 0 auto;
-}
-fieldset {
-  display: block;
-  -webkit-margin-start: 0px;
-  -webkit-margin-end: 0px;
-  -webkit-padding-before: 0em;
-  -webkit-padding-start: 0em;
-  -webkit-padding-end: 0em;
-  -webkit-padding-after: 0em;
-  border: 0px;
-  border-image-source: initial;
-  border-image-slice: initial;
-  border-image-width: initial;
-  border-image-outset: initial;
-  border-image-repeat: initial;
-  min-width: -webkit-min-content;
-  padding: 30px;
-}
-.city-input, p {
-  display: block;
-  font-weight:300;
-  width: 100%;
-  font-size: 25px;
-  border:0px;
-  outline: none;
-  width: 100%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
+  background-color: #f4f4f4; /* Light background for the page */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
   box-sizing: border-box;
-  color: #4b545f;
-  background: #fff;
-  font-family: Open Sans,Verdana;
-  padding: 10px 15px;
-  margin: 30px 0px;
 }
-.city-input:focus {
-  border-bottom:1px solid #ddd;
-}
-.city-button {
-  background-color: transparent;
-  border:2px solid #ddd;
-  padding:10px 30px;
+
+.container {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
   width: 100%;
-  min-width: 350px;
+  max-width: 500px; /* Max width for the container */
+  text-align: center; /* Center align fieldset contents */
 }
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.city-input {
+  width: calc(100% - 22px); /* Account for padding and border */
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+  font-family: 'Open Sans', sans-serif; /* Ensure font consistency */
+  box-sizing: border-box; /* Add box-sizing */
+}
+
+.city-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #5cb85c; /* Bootstrap success green */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Open Sans', sans-serif; /* Ensure font consistency */
+}
+
 .city-button:hover {
-  border:2px solid #515151;
+  background-color: #4cae4c;
 }
-p {
-  color: #E64A19;
+
+.weather-info {
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center; /* Center align text and icon */
+}
+
+.weather-info h3 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+}
+
+.weather-info img {
+  width: 100px; /* Adjust size as needed */
+  height: 100px;
+}
+
+.weather-info .temperature {
+  font-size: 2.5em;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.weather-info .description {
+  font-size: 1.2em;
+  /* text-transform: capitalize; */ /* Will be handled by JS already */
+  margin-bottom: 15px;
+}
+
+.weather-info p {
+    font-size: 1em; /* Reset paragraph font size inside weather-info */
+    color: inherit; /* Inherit color from parent for dynamic backgrounds */
+    margin: 8px 0; /* Adjust spacing for paragraphs in weather-info */
+}
+
+
+/* Dynamic backgrounds */
+.weather-clear {
+  background-color: #87CEEB; /* Sky Blue */
+  color: #000;
+}
+
+.weather-clouds {
+  background-color: #B0C4DE; /* Light Steel Blue */
+  color: #000;
+}
+
+.weather-rain {
+  background-color: #778899; /* Light Slate Gray */
+  color: #fff;
+}
+
+.weather-snow {
+  background-color: #FFFAFA; /* Snow */
+  color: #333;
+}
+
+.weather-thunderstorm {
+  background-color: #2F4F4F; /* Dark Slate Gray */
+  color: #fff;
+}
+
+.weather-drizzle {
+  background-color: #ADD8E6; /* Light Blue */
+  color: #000;
+}
+
+.weather-mist, .weather-haze, .weather-fog {
+  background-color: #D3D3D3; /* Light Grey */
+  color: #000;
+}
+/* Add any other specific conditions from OpenWeatherMap as needed */
+.weather-smoke, .weather-sand, .weather-dust, .weather-ash, .weather-squall, .weather-tornado {
+    background-color: #A9A9A9; /* Dark Gray for less common, potentially hazardous conditions */
+    color: #fff;
+}
+
+
+.error-message {
+  color: #d9534f; /* Bootstrap danger red */
+  font-weight: bold;
+  margin-top: 15px; /* Add some margin */
+  font-size: 1em; /* Ensure consistent font size */
+  text-align: center;
 }

@@ -14,11 +14,20 @@
           <input type="submit" class="city-button" value="Get Forecast">
         </form>
         <% if(weather !== null){ %>
-          <p><%= weather %></p>
+          <div class="weather-info weather-<%= weather.condition.toLowerCase() %>"> <!-- Added class for dynamic background -->
+            <h3><%= weather.name %></h3>
+            <img src="http://openweathermap.org/img/wn/<%= weather.icon %>@2x.png" alt="<%= weather.description %>">
+            <p class="temperature"><%= weather.temp %>°F</p>
+            <p class="description"><%= weather.description %></p>
+            <p>Humidity: <%= weather.humidity %>%</p>
+            <p>Wind: <%= weather.windSpeed %> m/s</p>
+            <!-- This condition can be used for more specific messages or styling if needed -->
+            <!-- <p>Condition: <%= weather.condition %></p> -->
+          </div>
         <% } %>
 
         <% if(error !== null){ %>
-          <p><%= error %></p>
+          <p class="error-message"><%= error %></p>
         <% } %>
       </fieldset>
     </div>
