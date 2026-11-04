@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
 const app = express()
-const apiKey = 'ade6ca51701b480b4ff90740e6d14611';
+const apiKey = process.env.OPENWEATHER_API_KEY;
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -13,15 +13,20 @@ app.get('/',(req, res) => {
 })
 
 app.post('/',(req, res) => {
+  if (!apiKey) {
+    return res.render('index', {weather: null, error: 'Weather service is not configured. Set OPENWEATHER_API_KEY.'});
+  }
   let city = req.body.city;
-  let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${apiKey}`;
+  let url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=imperial&appid=${apiKey}`;
 
   request(url,(err, response, body) => {
     if(err){
       console.log(err);
       res.render('index', {weather: null, error: 'Error: Could not connect to weather service. Please check your internet connection and try again.'});
     } else {
-      let weather = JSON.parse(body)
+      let weather;
+      try { weather = JSON.parse(body); }
+      catch { return res.render('index', {weather: null, error: 'Error: Weather service returned an invalid response.'}); }
       if(weather.main == undefined){
         res.render('index', {weather: null, error: 'Error: City not found or API data unavailable.'});
       } else {
@@ -43,6 +48,6 @@ app.post('/',(req, res) => {
   });
 })
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log('Weather forecast app running in port 3000!')
 })
