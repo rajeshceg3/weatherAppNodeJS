@@ -18,7 +18,7 @@ async function ready(base,route,child){for(let i=0;i<100;i++){if(evidence.proces
 const port=await reserve();const base=`http://127.0.0.1:${port}`;
 const child=launch(process.execPath,['index.js'],{PORT:String(port),OPENWEATHER_API_KEY:''});
 await ready(base,'/',child);
-const home=await request(base+'/');assert.equal(home.status,200);assert(home.text.includes('name="city"'));assert(home.text.includes('Get Forecast'));
+const home=await request(base+'/');assert.equal(home.status,200);assert(home.text.includes('name="city"'));assert(home.text.includes('Look outside'));
 const css=await request(base+'/css/style.css');assert.equal(css.status,200);
 const response=await request(base+'/',{method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},body:'city=Chennai'});
 assert.equal(response.status,200);assert(response.text.includes('Weather service is not configured.'));assert(!response.text.includes('class="weather-info'));
@@ -27,7 +27,7 @@ if(process.env.VERIFY_BROWSER==='1') {
  const {chromium}=require('@playwright/test');
  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_BIN||undefined,args:['--no-sandbox']});
  try {const page=await browser.newPage({viewport:{width:390,height:844}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
-await page.goto(base);await page.locator('[name="city"]').fill('Chennai');await page.screenshot({path:path.join(out,'weather-form.png'),fullPage:true});await page.getByRole('button',{name:'Get Forecast'}).click();await page.getByText('Weather service is not configured.',{exact:false}).waitFor();await page.screenshot({path:path.join(out,'weather-not-configured.png'),fullPage:true});
+await page.goto(base);await page.locator('[name="city"]').fill('Chennai');await page.screenshot({path:path.join(out,'weather-form.png'),fullPage:true});await page.getByRole('button',{name:'Look outside'}).click();await page.getByText('Weather service is not configured.',{exact:false}).waitFor();await page.screenshot({path:path.join(out,'weather-not-configured.png'),fullPage:true});
  fs.writeFileSync(path.join(out,'final-page.txt'),await page.locator('body').innerText());
  assert.deepEqual(errors,[]);evidence.actions.push({browser:'user journey passed',initialViewport:'390x844',finalViewport:page.viewportSize(),errors});
  } finally {await browser.close();}

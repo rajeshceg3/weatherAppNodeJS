@@ -1,35 +1,37 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Test</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
-  </head>
-  <body>
-    <div class="container">
-      <fieldset>
-        <form action="/" method="post">
-          <input name="city" type="text" class="city-input" placeholder="City Name" required>
-          <input type="submit" class="city-button" value="Get Forecast">
-        </form>
-        <% if(weather !== null){ %>
-          <div class="weather-info weather-<%= weather.condition.toLowerCase() %>"> <!-- Added class for dynamic background -->
-            <h3><%= weather.name %></h3>
-            <img src="http://openweathermap.org/img/wn/<%= weather.icon %>@2x.png" alt="<%= weather.description %>">
-            <p class="temperature"><%= weather.temp %>°F</p>
-            <p class="description"><%= weather.description %></p>
-            <p>Humidity: <%= weather.humidity %>%</p>
-            <p>Wind: <%= weather.windSpeed %> m/s</p>
-            <!-- This condition can be used for more specific messages or styling if needed -->
-            <!-- <p>Condition: <%= weather.condition %></p> -->
-          </div>
-        <% } %>
-
-        <% if(error !== null){ %>
-          <p class="error-message"><%= error %></p>
-        <% } %>
-      </fieldset>
-    </div>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#12272c">
+  <title>Weather, somewhere</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-condition="<%= weather ? weather.condition.toLowerCase() : 'quiet' %>">
+  <div class="atmosphere" aria-hidden="true"><div class="orb"></div><div class="cloud cloud-one"></div><div class="cloud cloud-two"></div><div class="rain"></div></div>
+  <main>
+    <header><a href="/" class="wordmark">Weather, somewhere<span class="wordmark-dot">.</span></a></header>
+    <section class="search-section" aria-labelledby="search-title">
+      <div class="intro"><h1 id="search-title">Current weather.</h1></div>
+      <form action="/" method="post" id="weather-form">
+        <div class="form-top"><label for="city">City</label><label class="unit-choice" for="units">Units <select id="units" name="units"><option value="metric" <%= units === "metric" ? "selected" : "" %>>°C</option><option value="imperial" <%= units === "imperial" ? "selected" : "" %>>°F</option></select></label></div><div class="search-row"><input id="city" name="city" type="text" placeholder="Chennai, London, Kyoto..." autocomplete="address-level2" maxlength="120" required value="<%= city || '' %>"><button type="submit"><span class="button-label">Look outside</span><span class="spinner" aria-hidden="true"></span><span aria-hidden="true" class="arrow">↗</span></button></div>
+      </form>
+      <p id="loading-status" role="status" aria-live="polite"></p>
+    </section>
+    <% if (weather) { %>
+    <section class="forecast" aria-labelledby="place-title">
+      <div class="forecast-head"><div><h2 id="place-title"><%= weather.name %></h2></div><span class="condition"><%= weather.description %></span></div>
+      <div class="temperature"><%= Math.round(weather.temp) %><span><%= units === 'metric' ? '°C' : '°F' %></span></div>
+      <div class="details"><div><span>Humidity</span><strong><%= weather.humidity %><small>%</small></strong></div><div><span>Wind</span><strong><%= weather.windSpeed %><small><%= units === 'metric' ? 'm/s' : 'mph' %></small></strong></div><div><span>Sky</span><strong class="sky-label"><%= weather.condition %></strong></div></div>
+      <p class="source">Current conditions from OpenWeather. Not a multi-day forecast.</p>
+    </section>
+    <% } else if (error) { %>
+    <section class="message" aria-labelledby="message-title"><span class="state-mark" aria-hidden="true">!</span><div><h2 id="message-title"><%= state === 'not-configured' ? 'The connection is not set up yet.' : 'No forecast this time.' %></h2><p class="error-message" role="alert"><%= error %></p></div></section>
+    <% } else { %>
+    <section class="empty" aria-label="Ready to search"><p>Search a city to see its current conditions.</p></section>
+    <% } %>
+    <footer><span>Weather data: OpenWeather</span></footer>
+  </main>
+  <script src="/app.js" defer></script>
+</body>
 </html>

@@ -8,7 +8,7 @@ Forecast form is a user-facing part of weatherAppNodeJS.
 
 ## How to get to it (user POV)
 
-Open /; type into City Name and press Get Forecast.
+Open /; type into City Name and press Look outside.
 
 ## Driving it with verify-weatherappnodejs
 
