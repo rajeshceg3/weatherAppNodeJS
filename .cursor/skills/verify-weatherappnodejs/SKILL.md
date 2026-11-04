@@ -34,3 +34,7 @@ The helper signals only the processes it created, waits, escalates only on its o
 ## Maintenance
 
 After behavior changes use /maintain-verification-skill: reconcile every mapped feature with source and exercise each live; report unreachable prerequisites and product regressions rather than editing the map to hide them.
+
+## Provider-boundary design fixtures
+
+Run `node .cursor/skills/verify-weatherappnodejs/verify-fixtures.cjs` with an installed Chrome executable at `/usr/bin/google-chrome`. This dedicated subprocess replaces the existing request-module provider boundary with known fixtures. Proof includes clear/rain, Celsius/Fahrenheit and correct wind units, malformed JSON/network/not-found, reduced motion and320/390/1365 layouts. All values are fixtures, never live readings. Own no-key helper remains the real safe path; provider success stays unverified until actual configured service is authorized.

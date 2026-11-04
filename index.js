@@ -7,19 +7,23 @@ const apiKey = process.env.OPENWEATHER_API_KEY;
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs')
+app.use((req,res,next)=>{res.locals.city='';res.locals.state='';res.locals.units='metric';next();})
 
 app.get('/',(req, res) => {
   res.render('index', {weather: null, error: null});
 })
 
 app.post('/',(req, res) => {
+  res.locals.units = req.body.units === 'imperial' ? 'imperial' : 'metric';
+  res.locals.city = typeof req.body.city === 'string' ? req.body.city.trim().slice(0,120) : '';
+  if (!res.locals.city) return res.status(400).render('index', {weather:null,error:'Enter a city to look up its current weather.'});
   if (!apiKey) {
-    return res.render('index', {weather: null, error: 'Weather service is not configured. Set OPENWEATHER_API_KEY.'});
+    return res.render('index', {weather: null, state:'not-configured', error: 'Weather service is not configured. Set OPENWEATHER_API_KEY.'});
   }
-  let city = req.body.city;
-  let url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=imperial&appid=${apiKey}`;
+  let city = res.locals.city;
+  let url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=${res.locals.units}&appid=${apiKey}`;
 
-  request(url,(err, response, body) => {
+  request({url,timeout:8000},(err, response, body) => {
     if(err){
       console.log(err);
       res.render('index', {weather: null, error: 'Error: Could not connect to weather service. Please check your internet connection and try again.'});
@@ -27,7 +31,7 @@ app.post('/',(req, res) => {
       let weather;
       try { weather = JSON.parse(body); }
       catch { return res.render('index', {weather: null, error: 'Error: Weather service returned an invalid response.'}); }
-      if(weather.main == undefined){
+      if(!weather || !weather.main || !Number.isFinite(weather.main.temp) || !Array.isArray(weather.weather) || !weather.weather[0] || typeof weather.weather[0].description !== 'string' || typeof weather.weather[0].main !== 'string' || !weather.wind){
         res.render('index', {weather: null, error: 'Error: City not found or API data unavailable.'});
       } else {
         const description = weather.weather[0].description;
